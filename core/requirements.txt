@@ -1,0 +1,9 @@
+# dy-yun core dependencies
+# Focused on config, logging, database, cache & queue abstractions
+
+pydantic>=2.12
+pydantic-settings>=2.2
+PyYAML>=6.0
+SQLAlchemy>=2.0
+loguru>=0.7
+redis>=5.0

@@ -1,0 +1,67 @@
+# dy-yun 开发环境配置文件
+# 企业级中后台应用框架 - Development
+
+application:
+  name: "dy-yun"
+  version: "0.1.0"
+  mode: "dev"  # dev 或 prod
+  host: "0.0.0.0"
+  port: 8001
+  read_timeout: 60
+  write_timeout: 60
+  enable_dp: true  # 启用数据权限
+
+jwt:
+  secret_key: "dy-yun-dev-secret-key"
+  expire_minutes: 1440  # 24 hours
+
+rate_limit:
+  enabled: true  # 是否启用限流
+  requests: 2000  # 开发环境限制更宽松
+  window: 60  # 时间窗口大小（秒）
+  use_redis: true  # 使用 Redis 存储
+
+database:
+  driver: "sqlite"  # mysql, postgresql, sqlite
+  host: "localhost"
+  port: 5432
+  name: "dy_yun"
+  username: ""
+  password: ""
+  source: "sqlite+aiosqlite:///./dy_yun.db"
+  max_idle_conns: 10
+  max_open_conns: 100
+  conn_max_lifetime: 3600
+
+cache:
+  driver: "redis"  # redis, memory
+  host: "localhost"
+  port: 6379
+  password: ""
+  db: 0
+
+queue:
+  driver: "redis"  # redis, memory
+  host: "localhost"
+  port: 6379
+  password: ""
+  db: 0
+  pool_num: 100  # 队列缓冲区大小，0 表示无限制
+  consumer_group: "dy_yun_dev_group"  # Redis 消费者组名称
+
+log:
+  level: "DEBUG"  # DEBUG, INFO, WARNING, ERROR
+  format: "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>"
+  file: "logs/app.dev.log"
+  rotation: "100 MB"
+  retention: "30 days"
+
+# 扩展配置 - 支持自定义配置项
+extend:
+  amap:
+    key: "dev-amap-key-example"
+  custom:
+    debug_mode: true
+    app_id:
+      - "948ce30f-84f7-430d-bcbc-ac2ec030204f"
+      - "3cae77d4-a766-4c0b-bdb2-eaeaaa86cd9d"

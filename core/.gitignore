@@ -1,0 +1,9 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Type checking cache
+.mypy_cache/
+.pytype/
