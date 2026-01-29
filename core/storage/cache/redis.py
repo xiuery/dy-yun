@@ -2,7 +2,7 @@
 Redis Cache Adapter - Redis缓存适配器
 """
 from datetime import timedelta
-from typing import Any, Optional
+from typing import Any, Optional, Union
 from redis import asyncio as aioredis
 from loguru import logger
 
@@ -133,10 +133,20 @@ class Redis(AdapterCache):
             logger.error(f"Redis DECR error: {e}")
             raise
     
-    async def expire(self, key: str, duration: timedelta) -> None:
-        """设置键的过期时间"""
+    async def expire(self, key: str, duration: Union[int, timedelta]) -> None:
+        """
+        设置键的过期时间
+        
+        Args:
+            key: 键
+            duration: 过期时间（秒数或timedelta对象）
+        """
         try:
-            await self.client.expire(key, int(duration.total_seconds()))
+            if isinstance(duration, timedelta):
+                seconds = int(duration.total_seconds())
+            else:
+                seconds = int(duration)
+            await self.client.expire(key, seconds)
         except Exception as e:
             logger.error(f"Redis EXPIRE error: {e}")
             raise
@@ -148,6 +158,78 @@ class Redis(AdapterCache):
         except Exception as e:
             logger.error(f"Redis EXISTS error: {e}")
             return False
+    
+    # ========== Sorted Set 操作 ==========
+    
+    async def zremrangebyscore(self, key: str, min_score: float, max_score: float) -> int:
+        """
+        移除有序集合中指定分数区间的成员
+        
+        Args:
+            key: 键
+            min_score: 最小分数
+            max_score: 最大分数
+            
+        Returns:
+            删除的成员数量
+        """
+        try:
+            return await self.client.zremrangebyscore(key, min_score, max_score)
+        except Exception as e:
+            logger.error(f"Redis ZREMRANGEBYSCORE error: {e}")
+            raise
+    
+    async def zcard(self, key: str) -> int:
+        """
+        获取有序集合的成员数量
+        
+        Args:
+            key: 键
+            
+        Returns:
+            成员数量
+        """
+        try:
+            return await self.client.zcard(key)
+        except Exception as e:
+            logger.error(f"Redis ZCARD error: {e}")
+            raise
+    
+    async def zrange(self, key: str, start: int, end: int, withscores: bool = False):
+        """
+        获取有序集合指定范围内的成员
+        
+        Args:
+            key: 键
+            start: 起始索引
+            end: 结束索引
+            withscores: 是否返回分数
+            
+        Returns:
+            成员列表或(成员,分数)元组列表
+        """
+        try:
+            return await self.client.zrange(key, start, end, withscores=withscores)
+        except Exception as e:
+            logger.error(f"Redis ZRANGE error: {e}")
+            raise
+    
+    async def zadd(self, key: str, mapping: dict) -> int:
+        """
+        向有序集合添加成员
+        
+        Args:
+            key: 键
+            mapping: {成员: 分数} 字典
+            
+        Returns:
+            添加的成员数量
+        """
+        try:
+            return await self.client.zadd(key, mapping)
+        except Exception as e:
+            logger.error(f"Redis ZADD error: {e}")
+            raise
     
     async def close(self) -> None:
         """关闭连接"""

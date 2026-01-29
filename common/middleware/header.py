@@ -4,7 +4,7 @@ Header middleware - HTTP头中间件
 """
 from datetime import datetime
 from fastapi import Request
-from starlette.responses import Response, JSONResponse
+from starlette.responses import JSONResponse
 
 
 async def no_cache_middleware(request: Request, call_next):

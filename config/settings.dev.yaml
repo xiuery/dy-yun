@@ -13,7 +13,7 @@ application:
 
 jwt:
   secret_key: "dy-yun-dev-secret-key"
-  expire_minutes: 1440  # 24 hours
+  timeout: 1440  # 24 hours
 
 rate_limit:
   enabled: true  # 是否启用限流

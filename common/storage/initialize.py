@@ -1,6 +1,5 @@
 """
 Storage Initializer - 存储组件初始化器
-参考 go-admin/common/storage/initialize.go
 """
 from loguru import logger
 from core.config import Settings

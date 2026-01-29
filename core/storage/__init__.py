@@ -1,6 +1,5 @@
 """
 Storage package - 存储管理包
-参考 go-admin-core/storage 设计
 """
 from core.storage.cache.adapter import AdapterCache
 from core.storage.cache.memory import Memory as CacheMemory

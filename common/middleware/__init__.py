@@ -4,7 +4,7 @@ Middleware package - 中间件
 from common.middleware.request_id import request_id_middleware
 from common.middleware.logger import logger_middleware
 from common.middleware.error_handler import error_handler_middleware
-from common.middleware.auth import create_access_token, get_current_user, TokenData
+from common.middleware.auth import init_auth_middleware, jwt_required, get_jwt_auth
 from common.middleware.permission import DataPermission, check_permission
 from common.middleware.rate_limit import (
     rate_limit_middleware,
@@ -22,9 +22,9 @@ __all__ = [
     "request_id_middleware",
     "logger_middleware",
     "error_handler_middleware",
-    "create_access_token",
-    "get_current_user",
-    "TokenData",
+    "init_auth_middleware",
+    "jwt_required",
+    "get_jwt_auth",
     "DataPermission",
     "check_permission",
     "rate_limit_middleware",

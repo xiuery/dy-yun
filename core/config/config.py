@@ -20,8 +20,7 @@ class ApplicationConfig(BaseModel):
 class JWTConfig(BaseModel):
     """JWT 配置"""
     secret_key: str = "dy-yun-secret-key"
-    access_token_expire_minutes: int = 30
-    refresh_token_expire_days: int = 7
+    timeout: int = 1440  # Token 过期时间（分钟）
 
 
 class RateLimitConfig(BaseModel):

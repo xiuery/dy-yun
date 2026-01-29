@@ -4,6 +4,7 @@ SysUser service - 用户服务
 from typing import Optional
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import defer
 from passlib.context import CryptContext
 from common.services import BaseService
 from common.schemas.pagination import PaginationRequest, PaginationResponse
@@ -23,7 +24,7 @@ class SysUserService(BaseService):
     ) -> PaginationResponse[SysUserResponse]:
         """分页查询用户"""
         offset = (pagination.page - 1) * pagination.page_size
-        stmt = select(SysUser)
+        stmt = select(SysUser).options(defer(SysUser.password))
         if query:
             if query.username:
                 stmt = stmt.where(SysUser.username.like(f"%{query.username}%"))
@@ -46,7 +47,9 @@ class SysUserService(BaseService):
     
     async def get_by_id(self, user_id: int) -> Optional[SysUser]:
         """根据 ID 获取用户"""
-        result = await self.db.execute(select(SysUser).where(SysUser.id == user_id))
+        result = await self.db.execute(
+            select(SysUser).options(defer(SysUser.password)).where(SysUser.id == user_id)
+        )
         return result.scalar_one_or_none()
     
     async def get_by_username(self, username: str) -> Optional[SysUser]:

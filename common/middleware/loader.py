@@ -17,6 +17,10 @@ def register_middlewares(app: FastAPI) -> None:
     按执行顺序倒序注册：
     执行顺序: request → error_handler → secure → options → no_cache → request_id → logger → rate_limit → 路由
     """
+    # 初始化 JWT 认证中间件
+    from common.middleware.auth import init_auth_middleware
+    init_auth_middleware()
+    
     # 最外层：捕获所有异常
     app.middleware("http")(error_handler_middleware)
     
